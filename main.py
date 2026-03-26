@@ -22,12 +22,14 @@ async def heartbeat():
 
 async def main():
     n = 0
+    asyncio.create_task(boton())
+    asyncio.create_task(heartbeat())
     while True:
         print(n)
         n += 1
         await asyncio.sleep(1)
 
-asyncio.create_task(boton())
-asyncio.create_task(heartbeat())
+""" asyncio.create_task(boton())
+asyncio.create_task(heartbeat()) """
 asyncio.run(main())  # Run main application code
  
