@@ -21,15 +21,15 @@ import dht, machine
 
 d = dht.DHT11(machine.Pin(15))
 
-def sub_cb(topic, msg, retained):
+def sub_cb(topic, msg, retained): # al recibir un mensaje agarra el topico y el string del mensaje y lo formatea para dar una salida dada Topic = {topico} -> Valor = {valor medido}'
     print('Topic = {} -> Valor = {}'.format(topic.decode(), msg.decode()))
 
-async def wifi_han(state):
+async def wifi_han(state): # lanza esto al percibir un cambio en la conexion wifi
     print('Wifi is ', 'up' if state else 'down')
     await asyncio.sleep(1)
 
 # If you connect with clean_session True, must re-subscribe (MQTT spec 3.1.2.4)
-async def conn_han(client):
+async def conn_han(client): #se subscripbe a estos topicos
     await client.subscribe('topico/temperatura', 1)
     await client.subscribe('topico/humedad', 1)
 
@@ -55,9 +55,9 @@ async def main(client):
         await asyncio.sleep(20)  # Broker is slow
 
 # Define configuration
-config['subs_cb'] = sub_cb
-config['connect_coro'] = conn_han
-config['wifi_coro'] = wifi_han
+config['subs_cb'] = sub_cb #cada vez que llega un mensaje ejecuta esto
+config['connect_coro'] = conn_han #cada vez que el dipositivo se conecta ejecuta esto
+config['wifi_coro'] = wifi_han #cuando el estado del wifi cambia ejecuta esto
 config['ssl'] = True
 
 # Set up client
