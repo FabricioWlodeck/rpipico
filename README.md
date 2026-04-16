@@ -27,11 +27,10 @@ A continuación se detallan los ítems completados para la realización de esta 
 ## Simulación y Hardware
 
 ### Simulación en Wokwi
-Para las pruebas de lógica y conectividad se utilizó el simulador Wokwi.
-* **Link del proyecto:** [Acceder a la simulación aquí](https://wokwi.com/projects/461326229117039617)
+En primera instacia se utilizó el simulador Wokwi para corroborar el correcto funcionamiento del código.
+* **Link del proyecto:** [Acceder a la simulación de Wokwi](https://wokwi.com/projects/461326229117039617)
 
 ![Captura de la Simulación](simulacion.jpeg)
-*Captura del circuito en Wokwi*
 
 ### Implementación Física
 El sistema se encuentra montado sobre una Raspberry Pi Pico W, utilizando un sensor DHT11 para las mediciones de temperatura y humedad.
