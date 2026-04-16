@@ -24,7 +24,7 @@ async def obtener_id_mac():
     mac = ubinascii.hexlify(mac_raw, ':').decode()
     return mac
 
-#---------- Funciones ----------
+#-------------------- Funciones --------------------
 def cargar_datos():
     global parametros
     try:
@@ -40,7 +40,6 @@ def cargar_datos():
             "rele": 0
         }
 
-# EJECUTAMOS LA CARGA (Sin await, porque es una función normal)
 cargar_datos()
 
 async def up(client, evento_suscrito):  # Respond to connectivity being (re)established
@@ -70,8 +69,7 @@ async def guardar_parametros(config):
     except OSError:
         print("Error guardando en flash")
 
-async def messages(client):  # Respond to incoming messages
-    # global setpoint, periodo, modo, rele
+async def messages(client):  
     async for topic, msg, retained in client.queue:
         topico = topic.decode()
         mensaje = msg.decode()
@@ -81,23 +79,19 @@ async def messages(client):  # Respond to incoming messages
         cambios = False # con esta bandera se cuando hay cambios para actulizar
 
         if topico.endswith("/setpoint"):
-            #setpoint = float(mensaje)
             parametros["setpoint"] = float(mensaje)
             cambios=True
             print(f"\n   Cambio de setpoint a: {parametros["setpoint"]}\n")
 
 
         if topico.endswith("/periodo"):
-            #periodo = int(mensaje)
             parametros["periodo"] = int(mensaje)
             cambios=True
 
         if topico.endswith("/modo"):
-            #modo = str(mensaje)
             parametros["modo"] = str(mensaje)
             cambios=True
-            print(f"\n   Cambio de modo a: {parametros["modo"]}\n")
-
+            #print(f"\n   Cambio de modo a: {parametros["modo"]}\n")
 
         if topico.endswith("/rele"):
             rele = mensaje
@@ -105,10 +99,9 @@ async def messages(client):  # Respond to incoming messages
                 parametros["rele"] = True
             else:
                 parametros["rele"] = False
-            print(f"\n   Cambio de luz del rele a: {parametros["rele"]}\n")
-
+            #print(f"\n   Cambio de luz del rele a: {parametros["rele"]}\n")
             cambios=True
-            print(f"\n   [ ¡¡¡¡¡ RELEE !!!!! ]\n")
+            #print(f"\n   [ ¡¡¡¡¡ RELEE !!!!! ]\n")
 
         if topico.endswith("/destello"):
             asyncio.create_task(destello())
@@ -116,7 +109,7 @@ async def messages(client):  # Respond to incoming messages
 
         if cambios == True:
            await guardar_parametros(parametros)
-           print("Archivo parametros.json actualizado con éxito.")
+           print("Archivo parametros.json actualizado con éxito!")
 
 async def rele_modo(parametros): 
     while True:
@@ -163,7 +156,6 @@ async def main(client):
     global ID_DISPOSITIVO
     ID_DISPOSITIVO = await obtener_id_mac()
 
-    # parametros = await cargar_parametros()
     await guardar_parametros(parametros)
 
     setpoint = parametros["setpoint"]
@@ -173,7 +165,6 @@ async def main(client):
 
     print(f"\n   Estado actual de rele: {parametros["rele"]}")
     print(f"   Modo actual: {parametros["modo"]}\n")
-
 
     print("----------------------------------------------------")
     print(f"        MAC ID: [ {ID_DISPOSITIVO} ]")
@@ -186,7 +177,7 @@ async def main(client):
     print("Intentando conectar al broker...")
     await client.connect()
 
-    # Esperamos a que el evento 'up' de la librería se active
+    # Esperamos a que el evento 'up' se active, asi se termina de subscribir
     while not client.isconnected(): 
         await asyncio.sleep(1)
     await asyncio.sleep(1)
@@ -197,13 +188,10 @@ async def main(client):
     asyncio.create_task(up(client, evento_suscrito))
     asyncio.create_task(messages(client))
     asyncio.create_task(rele_modo(parametros))
-    # asyncio.create_task(destello())
 
     print("Esperando suscripciones...")
     await evento_suscrito.wait() 
     print("\nSuscripciones listas. Iniciando sensado. \n\n")
-    
-    # asyncio.create_task(publicar_datos(ID_DISPOSITIVO))
     
     while True:
         while True:
@@ -225,11 +213,11 @@ async def main(client):
             
             await asyncio.sleep(parametros.get("periodo", 5)) 
 
-#----------  Conexion con el cliente  #----------
-config['ssl'] = True #para cifrar los datos
-config["socket_timeout"] = 20
-config["queue_len"] = 1  # Use event interface with default queue size
-MQTTClient.DEBUG = False  # Optional: print diagnostic messages
+#-------------------- Conexion con el cliente --------------------
+#config['ssl'] = True # para cifrar los datos
+config["socket_timeout"] = 20 #no tenia tiempo suficiente para conectarse
+config["queue_len"] = 1  
+MQTTClient.DEBUG = False 
 client = MQTTClient(config)
 
 try:
