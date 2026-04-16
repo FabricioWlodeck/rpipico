@@ -7,8 +7,8 @@ import uasyncio as asyncio
 import dht, machine
 import json
 
-
-sensor = dht.DHT22(machine.Pin(15))
+# las pruebas reales fueron realizadas con un sensor DHT11
+sensor = dht.DHT11(machine.Pin(15)) 
 ID_DISPOSITIVO = ""
 led_pico = machine.Pin("LED", machine.Pin.OUT)
 pin_rele = machine.Pin(14, machine.Pin.OUT)
@@ -112,7 +112,7 @@ async def messages(client):  # Respond to incoming messages
 
         if topico.endswith("/destello"):
             asyncio.create_task(destello())
-            print(f"\n   [ ¡¡¡¡¡ DESTELLOOOO !!!!! ]\n")
+            print(f"\n[ ¡¡¡¡¡ DESTELLOOOO !!!!! ]\n")
 
         if cambios == True:
            await guardar_parametros(parametros)
@@ -192,7 +192,7 @@ async def main(client):
     await asyncio.sleep(1)
     print("¡Conectado exitosamente!")
 
-    evento_suscrito = asyncio.Event()
+    evento_suscrito = asyncio.Event() #uso esto porque me molesta que empiece a medir sin que se haya subscrito, quedaba feo
     
     asyncio.create_task(up(client, evento_suscrito))
     asyncio.create_task(messages(client))
@@ -226,7 +226,7 @@ async def main(client):
             await asyncio.sleep(parametros.get("periodo", 5)) 
 
 #----------  Conexion con el cliente  #----------
-
+config['ssl'] = True #para cifrar los datos
 config["socket_timeout"] = 20
 config["queue_len"] = 1  # Use event interface with default queue size
 MQTTClient.DEBUG = False  # Optional: print diagnostic messages
