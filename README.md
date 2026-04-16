@@ -31,10 +31,10 @@ Para las pruebas de lógica y conectividad se utilizó el simulador Wokwi.
 * **Link del proyecto:** [Acceder a la simulación aquí](https://wokwi.com/projects/461326229117039617)
 
 ![Captura de la Simulación](simulacion.jpeg)
-*Descripción: Captura del circuito en Wokwi*
+*Captura del circuito en Wokwi*
 
 ### Implementación Física
 El sistema se encuentra montado sobre una Raspberry Pi Pico W, utilizando un sensor DHT11 para las mediciones de temperatura y humedad.
 
 ![Placa funcionando](implementacion_fisica.jpeg)
-*Descripción: Raspberry Pi Pico W en funcionamiento, conectada a la red y ejecutando el código*
+*Raspberry Pi Pico W en funcionamiento, conectada a la red y ejecutando el código*
