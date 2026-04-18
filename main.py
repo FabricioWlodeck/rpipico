@@ -42,10 +42,10 @@ def cargar_datos():
 
 cargar_datos()
 
-async def up(client, evento_suscrito):  # Respond to connectivity being (re)established
+async def up(client, evento_suscrito):  
     global ID_DISPOSITIVO
     while True:
-        await client.up.wait()  # Wait on an Event
+        await client.up.wait()  
         client.up.clear()
         await client.subscribe(f"{ID_DISPOSITIVO}/setpoint", 1)
         await client.subscribe(f"{ID_DISPOSITIVO}/periodo", 1)
